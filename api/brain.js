@@ -256,7 +256,8 @@ Respond with ONLY JSON: {"content": "post text here", "platform": "linkedin"}`;
       'You are a social media copywriter for a web design agency. Write authentic, non-cringe posts that establish authority and attract US business clients.',
       prompt
     );
-    const clean = resp.replace(/```json|```/g, '').trim();
+    const clean = resp.replace(/```json\n?|```\n?/g, '').trim();
+    if (!clean) return { created: 0, error: 'Empty response from Claude' };
     const parsed = JSON.parse(clean);
 
     const scheduleDate = new Date();
