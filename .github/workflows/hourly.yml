@@ -1,0 +1,23 @@
+name: Corbex AI Brain — Hourly Run
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour
+  workflow_dispatch:       # Also allows manual trigger from GitHub
+
+jobs:
+  run-brain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Corbex AI Brain
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET \
+            "https://corbex-brain.vercel.app/api/brain" \
+            -H "Content-Type: application/json")
+          echo "Brain response code: $response"
+          if [ "$response" != "200" ]; then
+            echo "Brain run failed with status $response"
+            exit 1
+          fi
+          echo "Brain run successful"
